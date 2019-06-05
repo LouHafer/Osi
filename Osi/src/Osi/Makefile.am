@@ -15,10 +15,12 @@ include $(top_srcdir)/BuildTools/Makemain.inc
 ########################################################################
 
 # Name of the library compiled in this directory.  We want it to be installed
-# in $libdir
+# in $libdir.
+
 lib_LTLIBRARIES = libOsi.la
 
-# List all source files for this library, including headers
+# List all source files for this library, including headers.
+
 libOsi_la_SOURCES = \
 	OsiConfig.h \
 	OsiAuxInfo.cpp OsiAuxInfo.hpp \
@@ -36,13 +38,16 @@ libOsi_la_SOURCES = \
 	OsiSolverInterface.cpp OsiSolverInterface.hpp \
 	OsiSolverParameters.hpp
 
-# List all additionally required libraries
+# List all additionally required libraries.
+
 libOsi_la_LIBADD = $(OSILIB_LFLAGS)
 
 # This is for libtool
+
 libOsi_la_LDFLAGS = $(LT_LDFLAGS)
 
 # Here list all include flags.
+
 AM_CPPFLAGS = -DOSILIB_BUILD $(OSILIB_CFLAGS)
 
 ########################################################################
@@ -50,7 +55,7 @@ AM_CPPFLAGS = -DOSILIB_BUILD $(OSILIB_CFLAGS)
 ########################################################################
 
 # Here list all the header files that are required by a user of the library,
-# and that therefore should be installed in pkgincludedir
+# and that therefore should be installed in pkgincludedir.
 
 includecoindir = $(pkgincludedir)
 includecoin_HEADERS = \
