@@ -16938,6 +16938,12 @@ $as_echo "no" >&6; }
     pkg_short_errors=""
   fi
 
+  # Check whether -static option of pkg-config should be used when requesting libs
+  pkg_static=
+  if test -n "$PKG_CONFIG" ; then
+    case "$LDFLAGS" in "-static" | "* -static*" ) pkg_static=--static ;; esac
+  fi
+
    if test -n "$PKG_CONFIG"; then
   COIN_HAS_PKGCONFIG_TRUE=
   COIN_HAS_PKGCONFIG_FALSE='#'
@@ -17219,7 +17225,7 @@ $as_echo "$as_me: FINALIZE_FLAGS for OsiLib:" >&6;}
 
       if test -n "${OSILIB_PCFILES}" ; then
         temp_CFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --cflags ${OSILIB_PCFILES}`
-        temp_LFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --libs ${OSILIB_PCFILES}`
+        temp_LFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --libs $pkg_static ${OSILIB_PCFILES}`
         OSILIB_CFLAGS="$temp_CFLAGS ${OSILIB_CFLAGS}"
         OSILIB_LFLAGS="$temp_LFLAGS ${OSILIB_LFLAGS}"
       fi
@@ -17702,7 +17708,7 @@ $as_echo "$as_me: FINALIZE_FLAGS for OsiCommonTestLib:" >&6;}
 
       if test -n "${OSICOMMONTESTLIB_PCFILES}" ; then
         temp_CFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --cflags ${OSICOMMONTESTLIB_PCFILES}`
-        temp_LFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --libs ${OSICOMMONTESTLIB_PCFILES}`
+        temp_LFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --libs $pkg_static ${OSICOMMONTESTLIB_PCFILES}`
         OSICOMMONTESTLIB_CFLAGS="$temp_CFLAGS ${OSICOMMONTESTLIB_CFLAGS}"
         OSICOMMONTESTLIB_LFLAGS="$temp_LFLAGS ${OSICOMMONTESTLIB_LFLAGS}"
       fi
@@ -19304,7 +19310,7 @@ $as_echo "$as_me: FINALIZE_FLAGS for OsiGlpkLib:" >&6;}
 
       if test -n "${OSIGLPKLIB_PCFILES}" ; then
         temp_CFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --cflags ${OSIGLPKLIB_PCFILES}`
-        temp_LFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --libs ${OSIGLPKLIB_PCFILES}`
+        temp_LFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --libs $pkg_static ${OSIGLPKLIB_PCFILES}`
         OSIGLPKLIB_CFLAGS="$temp_CFLAGS ${OSIGLPKLIB_CFLAGS}"
         OSIGLPKLIB_LFLAGS="$temp_LFLAGS ${OSIGLPKLIB_LFLAGS}"
       fi
@@ -19353,7 +19359,7 @@ $as_echo "$as_me: FINALIZE_FLAGS for OskSpxLib:" >&6;}
 
       if test -n "${OSKSPXLIB_PCFILES}" ; then
         temp_CFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --cflags ${OSKSPXLIB_PCFILES}`
-        temp_LFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --libs ${OSKSPXLIB_PCFILES}`
+        temp_LFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --libs $pkg_static ${OSKSPXLIB_PCFILES}`
         OSKSPXLIB_CFLAGS="$temp_CFLAGS ${OSKSPXLIB_CFLAGS}"
         OSKSPXLIB_LFLAGS="$temp_LFLAGS ${OSKSPXLIB_LFLAGS}"
       fi
@@ -19402,7 +19408,7 @@ $as_echo "$as_me: FINALIZE_FLAGS for OsiCpxLib:" >&6;}
 
       if test -n "${OSICPXLIB_PCFILES}" ; then
         temp_CFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --cflags ${OSICPXLIB_PCFILES}`
-        temp_LFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --libs ${OSICPXLIB_PCFILES}`
+        temp_LFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --libs $pkg_static ${OSICPXLIB_PCFILES}`
         OSICPXLIB_CFLAGS="$temp_CFLAGS ${OSICPXLIB_CFLAGS}"
         OSICPXLIB_LFLAGS="$temp_LFLAGS ${OSICPXLIB_LFLAGS}"
       fi
@@ -19451,7 +19457,7 @@ $as_echo "$as_me: FINALIZE_FLAGS for OsiMskLib:" >&6;}
 
       if test -n "${OSIMSKLIB_PCFILES}" ; then
         temp_CFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --cflags ${OSIMSKLIB_PCFILES}`
-        temp_LFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --libs ${OSIMSKLIB_PCFILES}`
+        temp_LFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --libs $pkg_static ${OSIMSKLIB_PCFILES}`
         OSIMSKLIB_CFLAGS="$temp_CFLAGS ${OSIMSKLIB_CFLAGS}"
         OSIMSKLIB_LFLAGS="$temp_LFLAGS ${OSIMSKLIB_LFLAGS}"
       fi
@@ -19500,7 +19506,7 @@ $as_echo "$as_me: FINALIZE_FLAGS for OsiXprLib:" >&6;}
 
       if test -n "${OSIXPRLIB_PCFILES}" ; then
         temp_CFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --cflags ${OSIXPRLIB_PCFILES}`
-        temp_LFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --libs ${OSIXPRLIB_PCFILES}`
+        temp_LFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --libs $pkg_static ${OSIXPRLIB_PCFILES}`
         OSIXPRLIB_CFLAGS="$temp_CFLAGS ${OSIXPRLIB_CFLAGS}"
         OSIXPRLIB_LFLAGS="$temp_LFLAGS ${OSIXPRLIB_LFLAGS}"
       fi
@@ -19549,7 +19555,7 @@ $as_echo "$as_me: FINALIZE_FLAGS for OsiGrbLib:" >&6;}
 
       if test -n "${OSIGRBLIB_PCFILES}" ; then
         temp_CFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --cflags ${OSIGRBLIB_PCFILES}`
-        temp_LFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --libs ${OSIGRBLIB_PCFILES}`
+        temp_LFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --libs $pkg_static ${OSIGRBLIB_PCFILES}`
         OSIGRBLIB_CFLAGS="$temp_CFLAGS ${OSIGRBLIB_CFLAGS}"
         OSIGRBLIB_LFLAGS="$temp_LFLAGS ${OSIGRBLIB_LFLAGS}"
       fi
@@ -19598,7 +19604,7 @@ $as_echo "$as_me: FINALIZE_FLAGS for OsiTest:" >&6;}
 
       if test -n "${OSITEST_PCFILES}" ; then
         temp_CFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --cflags ${OSITEST_PCFILES}`
-        temp_LFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --libs ${OSITEST_PCFILES}`
+        temp_LFLAGS=`PKG_CONFIG_PATH="$COIN_PKG_CONFIG_PATH" $PKG_CONFIG --libs $pkg_static ${OSITEST_PCFILES}`
         OSITEST_CFLAGS="$temp_CFLAGS ${OSITEST_CFLAGS}"
         OSITEST_LFLAGS="$temp_LFLAGS ${OSITEST_LFLAGS}"
       fi
