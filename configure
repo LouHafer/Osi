@@ -17041,7 +17041,7 @@ fi
         ;;
       * )
         coin_has_coinutils=yes
-                coinutils_lflags="$withval"
+        coinutils_lflags="$withval"
         ;;
     esac
   fi
@@ -17335,7 +17335,7 @@ fi
         ;;
       * )
         coin_has_sample=yes
-                sample_data="$withval"
+        sample_data="$withval"
         ;;
     esac
   fi
@@ -17548,7 +17548,7 @@ fi
         ;;
       * )
         coin_has_netlib=yes
-                netlib_data="$withval"
+        netlib_data="$withval"
         ;;
     esac
   fi
@@ -17859,7 +17859,7 @@ fi
         ;;
       * )
         coin_has_glpk=yes
-                glpk_lflags="$withval"
+        glpk_lflags="$withval"
         ;;
     esac
   fi
@@ -18106,7 +18106,7 @@ fi
         ;;
       * )
         coin_has_soplex=yes
-                soplex_lflags="$withval"
+        soplex_lflags="$withval"
         ;;
     esac
   fi
@@ -18272,8 +18272,8 @@ $as_echo "#define OSI_HAS_SOPLEX 1" >>confdefs.h
 
 
 
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for package Cplex with function CPXgetstat" >&5
-$as_echo_n "checking for package Cplex with function CPXgetstat... " >&6; }
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for package Cplex with separate link and compile checks" >&5
+$as_echo_n "checking for package Cplex with separate link and compile checks... " >&6; }
 
 
 
@@ -18281,8 +18281,8 @@ $as_echo_n "checking for package Cplex with function CPXgetstat... " >&6; }
 
 
 
-  # Check to see if the user has overridden configure parameters from the
-  # environment.
+
+
   coin_has_cplex=noInfo
   if test x"$COIN_SKIP_PROJECTS" != x ; then
     for pkg in $COIN_SKIP_PROJECTS ; do
@@ -18291,6 +18291,7 @@ $as_echo_n "checking for package Cplex with function CPXgetstat... " >&6; }
       fi
     done
   fi
+
 
   if test "$coin_has_cplex" != skipping ; then
 
@@ -18320,147 +18321,119 @@ fi
 
 
 
-  dflt_action=yes
 
-  # Initialize variables for the primary library.
-  coin_has_cplex=noInfo
-  cplex_lflags=
-  cplex_cflags=
-  cplex_data=
+  cplex_lflags="-lcplex -lpthread -lm -ldl"
+  cplex_cflags=""
+  cplex_data=""
+  coin_has_cplex=requested
 
-  # --with-prim is always present.
+
   withval="$with_cplex"
   if test -n "$withval" ; then
     case "$withval" in
       no )
         coin_has_cplex=skipping
+	cplex_failmode='command line'
         ;;
       yes )
         coin_has_cplex=requested
-        ;;
-      build )
-        coin_has_cplex=build
+	cplex_failmode=''
         ;;
       * )
-        coin_has_cplex=yes
+        coin_has_cplex=requested
+	cplex_failmode=''
         cplex_lflags="$withval"
         ;;
     esac
+  else
+    if test -n "$with_cplex_lflags" ||
+       test -n "$with_cplex_cflags" ||
+       test -n "$with_cplex_data" ; then
+      coin_has_cplex=requested
+      cplex_failmode=''
+    fi
   fi
 
-  # --with-prim-lflags and --with-prim-cflags are present
-     # Specifying --with-prim=no overrides the individual options for lflags and cflags.
-     if test "$coin_has_cplex" != skipping ; then
+
+  if test "$coin_has_cplex" != skipping ; then
        withval="$with_cplex_lflags"
        if test -n "$withval" ; then
-         case "$withval" in
-           build | no | yes )
-             as_fn_error $? "\"$withval\" is not valid here; please specify linker flags appropriate for your environment." "$LINENO" 5
-             ;;
-           * )
-             coin_has_cplex=yes
-             cplex_lflags="$withval"
-             ;;
-         esac
+	 coin_has_cplex=requested
+	 cplex_lflags="$withval"
        fi
 
        withval="$with_cplex_cflags"
        if test -n "$withval" ; then
-         case "$withval" in
-           build | no | yes )
-             as_fn_error $? "\"$withval\" is not valid here; please specify compiler flags appropriate for your environment." "$LINENO" 5
-             ;;
-           * )
-             coin_has_cplex=yes
-             cplex_cflags="$withval"
-             ;;
-         esac
+	 coin_has_cplex=requested
+	 cplex_cflags="$withval"
        fi
      fi
 
 
 
-  # At this point, coin_has_prim can be one of
-  # - noInfo (no user options specified),
-  # - skipping (user said no),
-  # - requested,
-  # - build (user said yes or build and gave no further guidance), or
-  # - yes (user specified one or more --with-prim options).
-  # If we're already at yes or skipping, we're done looking.
 
-  # If there are no user options (noInfo) and the default is no, we're skipping.
-  # Otherwise, the default must be yes or build; consider the package requested.
-  # A default action we don't recognise defaults to yes.
-  if test "$coin_has_cplex" = noInfo ; then
-    case $dflt_action in
-      no )
-        coin_has_cplex=skipping
-        ;;
-      build )
-        coin_has_cplex=build
-        ;;
-      * )
-        coin_has_cplex=requested
-        ;;
-    esac
-  fi
 
-  # Now coin_has_prim can be one of skipping, yes, build, or requested.
-  # For build or requested, use the parameter values or invent some.
-  case $coin_has_cplex in
-    build | requested)
-      cplex_lflags="-lcplex -lpthread -lm -ldl"
-         if test "$coin_has_cplex" = build ; then
-              cplex_cflags="-I\$(pkgincludedir)/ThirdParty"
-            fi
 
-      coin_has_cplex=yes
-      ;;
-    skipping | yes )
-      ;;
-    * )
-      { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Unexpected status \"$coin_has_cplex\" in COIN_FIND_PRIM_LIB" >&5
-$as_echo "$as_me: WARNING: Unexpected status \"$coin_has_cplex\" in COIN_FIND_PRIM_LIB" >&2;}
-      ;;
-  esac
-
-  # At this point, coin_has_prim is yes or skipping.
   if test $coin_has_cplex != skipping ; then
-       # Time to run a link check since we have a function name.
-       # Use whatever we've collected for lflags, plus other libraries ().
-       ac_save_LIBS=$LIBS
-       LIBS="$cplex_lflags "
+       ac_save_CPPFLAGS=$CPPFLAGS
+       CPPFLAGS="$cplex_cflags"
        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char CPXgetstat ();
+#include "cplex.h"
 int
 main ()
 {
-return CPXgetstat ();
+
   ;
   return 0;
 }
 _ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+
+else
+  coin_has_cplex='no'
+	  cplex_failmode="header compile"
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+       CPPFLAGS=$ac_save_CPPFLAGS
+     fi
+
+
+  if test "$coin_has_cplex" != skipping ; then
+       ac_save_LIBS=$LIBS
+       ac_save_CPPFLAGS=$CPPFLAGS
+       LIBS="$cplex_lflags"
+       CPPFLAGS="$cplex_cflags"
+       cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+#ifdef __cplusplus
+  extern "C"
+#endif
+  void CPXgetstat() ;
+  int main () { CPXgetstat() ; return (0) ; }
+_ACEOF
 if ac_fn_cxx_try_link "$LINENO"; then :
 
 else
-  coin_has_cplex=no
+  coin_has_cplex='no'
+	     if test -n "$cplex_failmode" ; then
+	       cplex_failmode="$cplex_failmode, bare link"
+	     else
+	       cplex_failmode="bare link"
+	     fi
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
        LIBS=$ac_save_LIBS
+       CPPFLAGS=$ac_save_CPPFLAGS
      fi
 
-  # The final value of coin_has_prim will be yes, no, or skipping. No means that
-  # the link check failed. Yes means that we passed the link check, or no link
-  # check was performed. Skipping means the user said `don't use.'
+
+  if test $coin_has_cplex = requested ; then
+    coin_has_cplex=yes
+  fi
+
 
   # Define BUILDTOOLS_DEBUG to enable debugging output
   if test "$BUILDTOOLS_DEBUG" = 1 ; then
@@ -18478,18 +18451,34 @@ $as_echo "$as_me: cplex_data is \"$cplex_data\"" >&6;}
 $as_echo "$as_me: cplex_pcfiles is \"$cplex_pcfiles\"" >&6;}
   fi
 
-
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $coin_has_cplex" >&5
+    if test -n "$cplex_failmode" ; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: result: $coin_has_cplex ($cplex_failmode)" >&5
+$as_echo "$coin_has_cplex ($cplex_failmode)" >&6; }
+    else
+      { $as_echo "$as_me:${as_lineno-$LINENO}: result: $coin_has_cplex" >&5
 $as_echo "$coin_has_cplex" >&6; }
+    fi
   else
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $coin_has_cplex due to COIN_SKIP_PROJECTS" >&5
-$as_echo "$coin_has_cplex due to COIN_SKIP_PROJECTS" >&6; }
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $coin_has_cplex (COIN_SKIP_PROJECTS)" >&5
+$as_echo "$coin_has_cplex (COIN_SKIP_PROJECTS)" >&6; }
   fi
 
-  # Possibilities are `yes', `no', or `skipping'. Normalise to `yes' or `no'.
+  if test "$coin_has_cplex" = "no" ; then
+    if expr "$cplex_failmode" : '.*header.*' &>/dev/null ; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Compiler flags are \"$cplex_cflags\". Check that they are correct. You can supply correct values using --with-cplex-cflags." >&5
+$as_echo "$as_me: WARNING: Compiler flags are \"$cplex_cflags\". Check that they are correct. You can supply correct values using --with-cplex-cflags." >&2;}
+    fi
+    if expr "$cplex_failmode" : '.*link.*' &>/dev/null ; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Linker flags are \"$cplex_lflags\". Check that they are correct. You can supply correct values using --with-cplex-lflags." >&5
+$as_echo "$as_me: WARNING: Linker flags are \"$cplex_lflags\". Check that they are correct. You can supply correct values using --with-cplex-lflags." >&2;}
+    fi
+  fi
+
+
   if test "$coin_has_cplex" != yes ; then
     coin_has_cplex=no
   fi
+
 
    if test $coin_has_cplex = yes; then
   COIN_HAS_CPLEX_TRUE=
@@ -18500,8 +18489,7 @@ else
 fi
 
 
-  # If we've located the package, define preprocessor symbol COIN_HAS_PRIM
-  # and augment the necessary variables for the client packages.
+
   if test $coin_has_cplex = yes ; then
 
 $as_echo "#define OSI_HAS_CPLEX 1" >>confdefs.h
@@ -18513,24 +18501,15 @@ $as_echo "#define OSI_HAS_CPLEX 1" >>confdefs.h
 
 
 
+
   fi
 
-if test "$coin_has_cplex" = yes ; then
-  coin_save_CPPFLAGS="$CPPFLAGS"
-  CPPFLAGS="$cplex_cflags $CPPFLAGS"
-  ac_fn_cxx_check_header_mongrel "$LINENO" "cplex.h" "ac_cv_header_cplex_h" "$ac_includes_default"
-if test "x$ac_cv_header_cplex_h" = xyes; then :
-  CPPFLAGS="$coin_save_CPPFLAGS"
-else
-  as_fn_error $? "CPLEX library available, but CPLEX header cplex.h cannot be compiled. Consider using --without-cplex." "$LINENO" 5
-fi
 
 
-fi
 
 
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for package Mosek with function MSK_makeenv" >&5
-$as_echo_n "checking for package Mosek with function MSK_makeenv... " >&6; }
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for package Mosek with separate link and compile checks" >&5
+$as_echo_n "checking for package Mosek with separate link and compile checks... " >&6; }
 
 
 
@@ -18538,8 +18517,8 @@ $as_echo_n "checking for package Mosek with function MSK_makeenv... " >&6; }
 
 
 
-  # Check to see if the user has overridden configure parameters from the
-  # environment.
+
+
   coin_has_mosek=noInfo
   if test x"$COIN_SKIP_PROJECTS" != x ; then
     for pkg in $COIN_SKIP_PROJECTS ; do
@@ -18548,6 +18527,7 @@ $as_echo_n "checking for package Mosek with function MSK_makeenv... " >&6; }
       fi
     done
   fi
+
 
   if test "$coin_has_mosek" != skipping ; then
 
@@ -18577,147 +18557,119 @@ fi
 
 
 
-  dflt_action=yes
 
-  # Initialize variables for the primary library.
-  coin_has_mosek=noInfo
-  mosek_lflags=
-  mosek_cflags=
-  mosek_data=
+  mosek_lflags="-lmosek64 -lpthread"
+  mosek_cflags=""
+  mosek_data=""
+  coin_has_mosek=requested
 
-  # --with-prim is always present.
+
   withval="$with_mosek"
   if test -n "$withval" ; then
     case "$withval" in
       no )
         coin_has_mosek=skipping
+	mosek_failmode='command line'
         ;;
       yes )
         coin_has_mosek=requested
-        ;;
-      build )
-        coin_has_mosek=build
+	mosek_failmode=''
         ;;
       * )
-        coin_has_mosek=yes
+        coin_has_mosek=requested
+	mosek_failmode=''
         mosek_lflags="$withval"
         ;;
     esac
+  else
+    if test -n "$with_mosek_lflags" ||
+       test -n "$with_mosek_cflags" ||
+       test -n "$with_mosek_data" ; then
+      coin_has_mosek=requested
+      mosek_failmode=''
+    fi
   fi
 
-  # --with-prim-lflags and --with-prim-cflags are present
-     # Specifying --with-prim=no overrides the individual options for lflags and cflags.
-     if test "$coin_has_mosek" != skipping ; then
+
+  if test "$coin_has_mosek" != skipping ; then
        withval="$with_mosek_lflags"
        if test -n "$withval" ; then
-         case "$withval" in
-           build | no | yes )
-             as_fn_error $? "\"$withval\" is not valid here; please specify linker flags appropriate for your environment." "$LINENO" 5
-             ;;
-           * )
-             coin_has_mosek=yes
-             mosek_lflags="$withval"
-             ;;
-         esac
+	 coin_has_mosek=requested
+	 mosek_lflags="$withval"
        fi
 
        withval="$with_mosek_cflags"
        if test -n "$withval" ; then
-         case "$withval" in
-           build | no | yes )
-             as_fn_error $? "\"$withval\" is not valid here; please specify compiler flags appropriate for your environment." "$LINENO" 5
-             ;;
-           * )
-             coin_has_mosek=yes
-             mosek_cflags="$withval"
-             ;;
-         esac
+	 coin_has_mosek=requested
+	 mosek_cflags="$withval"
        fi
      fi
 
 
 
-  # At this point, coin_has_prim can be one of
-  # - noInfo (no user options specified),
-  # - skipping (user said no),
-  # - requested,
-  # - build (user said yes or build and gave no further guidance), or
-  # - yes (user specified one or more --with-prim options).
-  # If we're already at yes or skipping, we're done looking.
 
-  # If there are no user options (noInfo) and the default is no, we're skipping.
-  # Otherwise, the default must be yes or build; consider the package requested.
-  # A default action we don't recognise defaults to yes.
-  if test "$coin_has_mosek" = noInfo ; then
-    case $dflt_action in
-      no )
-        coin_has_mosek=skipping
-        ;;
-      build )
-        coin_has_mosek=build
-        ;;
-      * )
-        coin_has_mosek=requested
-        ;;
-    esac
-  fi
 
-  # Now coin_has_prim can be one of skipping, yes, build, or requested.
-  # For build or requested, use the parameter values or invent some.
-  case $coin_has_mosek in
-    build | requested)
-      mosek_lflags="-lmosek64 -lpthread"
-         if test "$coin_has_mosek" = build ; then
-              mosek_cflags="-I\$(pkgincludedir)/ThirdParty"
-            fi
 
-      coin_has_mosek=yes
-      ;;
-    skipping | yes )
-      ;;
-    * )
-      { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Unexpected status \"$coin_has_mosek\" in COIN_FIND_PRIM_LIB" >&5
-$as_echo "$as_me: WARNING: Unexpected status \"$coin_has_mosek\" in COIN_FIND_PRIM_LIB" >&2;}
-      ;;
-  esac
-
-  # At this point, coin_has_prim is yes or skipping.
   if test $coin_has_mosek != skipping ; then
-       # Time to run a link check since we have a function name.
-       # Use whatever we've collected for lflags, plus other libraries ().
-       ac_save_LIBS=$LIBS
-       LIBS="$mosek_lflags "
+       ac_save_CPPFLAGS=$CPPFLAGS
+       CPPFLAGS="$mosek_cflags"
        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char MSK_makeenv ();
+#include "mosek.h"
 int
 main ()
 {
-return MSK_makeenv ();
+
   ;
   return 0;
 }
 _ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+
+else
+  coin_has_mosek='no'
+	  mosek_failmode="header compile"
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+       CPPFLAGS=$ac_save_CPPFLAGS
+     fi
+
+
+  if test "$coin_has_mosek" != skipping ; then
+       ac_save_LIBS=$LIBS
+       ac_save_CPPFLAGS=$CPPFLAGS
+       LIBS="$mosek_lflags"
+       CPPFLAGS="$mosek_cflags"
+       cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+#ifdef __cplusplus
+  extern "C"
+#endif
+  void MSK_makeenv() ;
+  int main () { MSK_makeenv() ; return (0) ; }
+_ACEOF
 if ac_fn_cxx_try_link "$LINENO"; then :
 
 else
-  coin_has_mosek=no
+  coin_has_mosek='no'
+	     if test -n "$mosek_failmode" ; then
+	       mosek_failmode="$mosek_failmode, bare link"
+	     else
+	       mosek_failmode="bare link"
+	     fi
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
        LIBS=$ac_save_LIBS
+       CPPFLAGS=$ac_save_CPPFLAGS
      fi
 
-  # The final value of coin_has_prim will be yes, no, or skipping. No means that
-  # the link check failed. Yes means that we passed the link check, or no link
-  # check was performed. Skipping means the user said `don't use.'
+
+  if test $coin_has_mosek = requested ; then
+    coin_has_mosek=yes
+  fi
+
 
   # Define BUILDTOOLS_DEBUG to enable debugging output
   if test "$BUILDTOOLS_DEBUG" = 1 ; then
@@ -18735,18 +18687,34 @@ $as_echo "$as_me: mosek_data is \"$mosek_data\"" >&6;}
 $as_echo "$as_me: mosek_pcfiles is \"$mosek_pcfiles\"" >&6;}
   fi
 
-
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $coin_has_mosek" >&5
+    if test -n "$mosek_failmode" ; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: result: $coin_has_mosek ($mosek_failmode)" >&5
+$as_echo "$coin_has_mosek ($mosek_failmode)" >&6; }
+    else
+      { $as_echo "$as_me:${as_lineno-$LINENO}: result: $coin_has_mosek" >&5
 $as_echo "$coin_has_mosek" >&6; }
+    fi
   else
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $coin_has_mosek due to COIN_SKIP_PROJECTS" >&5
-$as_echo "$coin_has_mosek due to COIN_SKIP_PROJECTS" >&6; }
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $coin_has_mosek (COIN_SKIP_PROJECTS)" >&5
+$as_echo "$coin_has_mosek (COIN_SKIP_PROJECTS)" >&6; }
   fi
 
-  # Possibilities are `yes', `no', or `skipping'. Normalise to `yes' or `no'.
+  if test "$coin_has_mosek" = "no" ; then
+    if expr "$mosek_failmode" : '.*header.*' &>/dev/null ; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Compiler flags are \"$mosek_cflags\". Check that they are correct. You can supply correct values using --with-mosek-cflags." >&5
+$as_echo "$as_me: WARNING: Compiler flags are \"$mosek_cflags\". Check that they are correct. You can supply correct values using --with-mosek-cflags." >&2;}
+    fi
+    if expr "$mosek_failmode" : '.*link.*' &>/dev/null ; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Linker flags are \"$mosek_lflags\". Check that they are correct. You can supply correct values using --with-mosek-lflags." >&5
+$as_echo "$as_me: WARNING: Linker flags are \"$mosek_lflags\". Check that they are correct. You can supply correct values using --with-mosek-lflags." >&2;}
+    fi
+  fi
+
+
   if test "$coin_has_mosek" != yes ; then
     coin_has_mosek=no
   fi
+
 
    if test $coin_has_mosek = yes; then
   COIN_HAS_MOSEK_TRUE=
@@ -18757,8 +18725,7 @@ else
 fi
 
 
-  # If we've located the package, define preprocessor symbol COIN_HAS_PRIM
-  # and augment the necessary variables for the client packages.
+
   if test $coin_has_mosek = yes ; then
 
 $as_echo "#define OSI_HAS_MOSEK 1" >>confdefs.h
@@ -18770,24 +18737,15 @@ $as_echo "#define OSI_HAS_MOSEK 1" >>confdefs.h
 
 
 
+
   fi
 
-if test "$coin_has_mosek" = yes ; then
-  coin_save_CPPFLAGS="$CPPFLAGS"
-  CPPFLAGS="$mosek_cflags $CPPFLAGS"
-  ac_fn_cxx_check_header_mongrel "$LINENO" "mosek.h" "ac_cv_header_mosek_h" "$ac_includes_default"
-if test "x$ac_cv_header_mosek_h" = xyes; then :
-  CPPFLAGS="$coin_save_CPPFLAGS"
-else
-  as_fn_error $? "MOSEK library available, but MOSEK header mosek.h cannot be compiled. Consider using --without-mosek." "$LINENO" 5
-fi
 
 
-fi
 
 
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for package Xpress with function XPRSinit" >&5
-$as_echo_n "checking for package Xpress with function XPRSinit... " >&6; }
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for package Xpress with separate link and compile checks" >&5
+$as_echo_n "checking for package Xpress with separate link and compile checks... " >&6; }
 
 
 
@@ -18795,8 +18753,8 @@ $as_echo_n "checking for package Xpress with function XPRSinit... " >&6; }
 
 
 
-  # Check to see if the user has overridden configure parameters from the
-  # environment.
+
+
   coin_has_xpress=noInfo
   if test x"$COIN_SKIP_PROJECTS" != x ; then
     for pkg in $COIN_SKIP_PROJECTS ; do
@@ -18805,6 +18763,7 @@ $as_echo_n "checking for package Xpress with function XPRSinit... " >&6; }
       fi
     done
   fi
+
 
   if test "$coin_has_xpress" != skipping ; then
 
@@ -18834,147 +18793,119 @@ fi
 
 
 
-  dflt_action=yes
 
-  # Initialize variables for the primary library.
-  coin_has_xpress=noInfo
-  xpress_lflags=
-  xpress_cflags=
-  xpress_data=
+  xpress_lflags="-lxprs -lxprl"
+  xpress_cflags=""
+  xpress_data=""
+  coin_has_xpress=requested
 
-  # --with-prim is always present.
+
   withval="$with_xpress"
   if test -n "$withval" ; then
     case "$withval" in
       no )
         coin_has_xpress=skipping
+	xpress_failmode='command line'
         ;;
       yes )
         coin_has_xpress=requested
-        ;;
-      build )
-        coin_has_xpress=build
+	xpress_failmode=''
         ;;
       * )
-        coin_has_xpress=yes
+        coin_has_xpress=requested
+	xpress_failmode=''
         xpress_lflags="$withval"
         ;;
     esac
+  else
+    if test -n "$with_xpress_lflags" ||
+       test -n "$with_xpress_cflags" ||
+       test -n "$with_xpress_data" ; then
+      coin_has_xpress=requested
+      xpress_failmode=''
+    fi
   fi
 
-  # --with-prim-lflags and --with-prim-cflags are present
-     # Specifying --with-prim=no overrides the individual options for lflags and cflags.
-     if test "$coin_has_xpress" != skipping ; then
+
+  if test "$coin_has_xpress" != skipping ; then
        withval="$with_xpress_lflags"
        if test -n "$withval" ; then
-         case "$withval" in
-           build | no | yes )
-             as_fn_error $? "\"$withval\" is not valid here; please specify linker flags appropriate for your environment." "$LINENO" 5
-             ;;
-           * )
-             coin_has_xpress=yes
-             xpress_lflags="$withval"
-             ;;
-         esac
+	 coin_has_xpress=requested
+	 xpress_lflags="$withval"
        fi
 
        withval="$with_xpress_cflags"
        if test -n "$withval" ; then
-         case "$withval" in
-           build | no | yes )
-             as_fn_error $? "\"$withval\" is not valid here; please specify compiler flags appropriate for your environment." "$LINENO" 5
-             ;;
-           * )
-             coin_has_xpress=yes
-             xpress_cflags="$withval"
-             ;;
-         esac
+	 coin_has_xpress=requested
+	 xpress_cflags="$withval"
        fi
      fi
 
 
 
-  # At this point, coin_has_prim can be one of
-  # - noInfo (no user options specified),
-  # - skipping (user said no),
-  # - requested,
-  # - build (user said yes or build and gave no further guidance), or
-  # - yes (user specified one or more --with-prim options).
-  # If we're already at yes or skipping, we're done looking.
 
-  # If there are no user options (noInfo) and the default is no, we're skipping.
-  # Otherwise, the default must be yes or build; consider the package requested.
-  # A default action we don't recognise defaults to yes.
-  if test "$coin_has_xpress" = noInfo ; then
-    case $dflt_action in
-      no )
-        coin_has_xpress=skipping
-        ;;
-      build )
-        coin_has_xpress=build
-        ;;
-      * )
-        coin_has_xpress=requested
-        ;;
-    esac
-  fi
 
-  # Now coin_has_prim can be one of skipping, yes, build, or requested.
-  # For build or requested, use the parameter values or invent some.
-  case $coin_has_xpress in
-    build | requested)
-      xpress_lflags="-lxprs -lxprl"
-         if test "$coin_has_xpress" = build ; then
-              xpress_cflags="-I\$(pkgincludedir)/ThirdParty"
-            fi
 
-      coin_has_xpress=yes
-      ;;
-    skipping | yes )
-      ;;
-    * )
-      { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Unexpected status \"$coin_has_xpress\" in COIN_FIND_PRIM_LIB" >&5
-$as_echo "$as_me: WARNING: Unexpected status \"$coin_has_xpress\" in COIN_FIND_PRIM_LIB" >&2;}
-      ;;
-  esac
-
-  # At this point, coin_has_prim is yes or skipping.
   if test $coin_has_xpress != skipping ; then
-       # Time to run a link check since we have a function name.
-       # Use whatever we've collected for lflags, plus other libraries ().
-       ac_save_LIBS=$LIBS
-       LIBS="$xpress_lflags "
+       ac_save_CPPFLAGS=$CPPFLAGS
+       CPPFLAGS="$xpress_cflags"
        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char XPRSinit ();
+#include "xprs.h"
 int
 main ()
 {
-return XPRSinit ();
+
   ;
   return 0;
 }
 _ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+
+else
+  coin_has_xpress='no'
+	  xpress_failmode="header compile"
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+       CPPFLAGS=$ac_save_CPPFLAGS
+     fi
+
+
+  if test "$coin_has_xpress" != skipping ; then
+       ac_save_LIBS=$LIBS
+       ac_save_CPPFLAGS=$CPPFLAGS
+       LIBS="$xpress_lflags"
+       CPPFLAGS="$xpress_cflags"
+       cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+#ifdef __cplusplus
+  extern "C"
+#endif
+  void XPRSinit() ;
+  int main () { XPRSinit() ; return (0) ; }
+_ACEOF
 if ac_fn_cxx_try_link "$LINENO"; then :
 
 else
-  coin_has_xpress=no
+  coin_has_xpress='no'
+	     if test -n "$xpress_failmode" ; then
+	       xpress_failmode="$xpress_failmode, bare link"
+	     else
+	       xpress_failmode="bare link"
+	     fi
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
        LIBS=$ac_save_LIBS
+       CPPFLAGS=$ac_save_CPPFLAGS
      fi
 
-  # The final value of coin_has_prim will be yes, no, or skipping. No means that
-  # the link check failed. Yes means that we passed the link check, or no link
-  # check was performed. Skipping means the user said `don't use.'
+
+  if test $coin_has_xpress = requested ; then
+    coin_has_xpress=yes
+  fi
+
 
   # Define BUILDTOOLS_DEBUG to enable debugging output
   if test "$BUILDTOOLS_DEBUG" = 1 ; then
@@ -18992,18 +18923,34 @@ $as_echo "$as_me: xpress_data is \"$xpress_data\"" >&6;}
 $as_echo "$as_me: xpress_pcfiles is \"$xpress_pcfiles\"" >&6;}
   fi
 
-
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $coin_has_xpress" >&5
+    if test -n "$xpress_failmode" ; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: result: $coin_has_xpress ($xpress_failmode)" >&5
+$as_echo "$coin_has_xpress ($xpress_failmode)" >&6; }
+    else
+      { $as_echo "$as_me:${as_lineno-$LINENO}: result: $coin_has_xpress" >&5
 $as_echo "$coin_has_xpress" >&6; }
+    fi
   else
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $coin_has_xpress due to COIN_SKIP_PROJECTS" >&5
-$as_echo "$coin_has_xpress due to COIN_SKIP_PROJECTS" >&6; }
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $coin_has_xpress (COIN_SKIP_PROJECTS)" >&5
+$as_echo "$coin_has_xpress (COIN_SKIP_PROJECTS)" >&6; }
   fi
 
-  # Possibilities are `yes', `no', or `skipping'. Normalise to `yes' or `no'.
+  if test "$coin_has_xpress" = "no" ; then
+    if expr "$xpress_failmode" : '.*header.*' &>/dev/null ; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Compiler flags are \"$xpress_cflags\". Check that they are correct. You can supply correct values using --with-xpress-cflags." >&5
+$as_echo "$as_me: WARNING: Compiler flags are \"$xpress_cflags\". Check that they are correct. You can supply correct values using --with-xpress-cflags." >&2;}
+    fi
+    if expr "$xpress_failmode" : '.*link.*' &>/dev/null ; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Linker flags are \"$xpress_lflags\". Check that they are correct. You can supply correct values using --with-xpress-lflags." >&5
+$as_echo "$as_me: WARNING: Linker flags are \"$xpress_lflags\". Check that they are correct. You can supply correct values using --with-xpress-lflags." >&2;}
+    fi
+  fi
+
+
   if test "$coin_has_xpress" != yes ; then
     coin_has_xpress=no
   fi
+
 
    if test $coin_has_xpress = yes; then
   COIN_HAS_XPRESS_TRUE=
@@ -19014,8 +18961,7 @@ else
 fi
 
 
-  # If we've located the package, define preprocessor symbol COIN_HAS_PRIM
-  # and augment the necessary variables for the client packages.
+
   if test $coin_has_xpress = yes ; then
 
 $as_echo "#define OSI_HAS_XPRESS 1" >>confdefs.h
@@ -19027,24 +18973,15 @@ $as_echo "#define OSI_HAS_XPRESS 1" >>confdefs.h
 
 
 
+
   fi
 
-if test "$coin_has_xpress" = yes ; then
-  coin_save_CPPFLAGS="$CPPFLAGS"
-  CPPFLAGS="$xpress_cflags $CPPFLAGS"
-  ac_fn_cxx_check_header_mongrel "$LINENO" "xprs.h" "ac_cv_header_xprs_h" "$ac_includes_default"
-if test "x$ac_cv_header_xprs_h" = xyes; then :
-  CPPFLAGS="$coin_save_CPPFLAGS"
-else
-  as_fn_error $? "XPRESS library available, but XPRESS header xprs.h cannot be compiled. Consider using --without-xpress." "$LINENO" 5
-fi
 
 
-fi
 
 
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for package Gurobi with function GRBloadenv" >&5
-$as_echo_n "checking for package Gurobi with function GRBloadenv... " >&6; }
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for package Gurobi with separate link and compile checks" >&5
+$as_echo_n "checking for package Gurobi with separate link and compile checks... " >&6; }
 
 
 
@@ -19052,8 +18989,8 @@ $as_echo_n "checking for package Gurobi with function GRBloadenv... " >&6; }
 
 
 
-  # Check to see if the user has overridden configure parameters from the
-  # environment.
+
+
   coin_has_gurobi=noInfo
   if test x"$COIN_SKIP_PROJECTS" != x ; then
     for pkg in $COIN_SKIP_PROJECTS ; do
@@ -19062,6 +18999,7 @@ $as_echo_n "checking for package Gurobi with function GRBloadenv... " >&6; }
       fi
     done
   fi
+
 
   if test "$coin_has_gurobi" != skipping ; then
 
@@ -19091,147 +19029,119 @@ fi
 
 
 
-  dflt_action=yes
 
-  # Initialize variables for the primary library.
-  coin_has_gurobi=noInfo
-  gurobi_lflags=
-  gurobi_cflags=
-  gurobi_data=
+  gurobi_lflags="-lgurobi -lpthread -lm"
+  gurobi_cflags=""
+  gurobi_data=""
+  coin_has_gurobi=requested
 
-  # --with-prim is always present.
+
   withval="$with_gurobi"
   if test -n "$withval" ; then
     case "$withval" in
       no )
         coin_has_gurobi=skipping
+	gurobi_failmode='command line'
         ;;
       yes )
         coin_has_gurobi=requested
-        ;;
-      build )
-        coin_has_gurobi=build
+	gurobi_failmode=''
         ;;
       * )
-        coin_has_gurobi=yes
+        coin_has_gurobi=requested
+	gurobi_failmode=''
         gurobi_lflags="$withval"
         ;;
     esac
+  else
+    if test -n "$with_gurobi_lflags" ||
+       test -n "$with_gurobi_cflags" ||
+       test -n "$with_gurobi_data" ; then
+      coin_has_gurobi=requested
+      gurobi_failmode=''
+    fi
   fi
 
-  # --with-prim-lflags and --with-prim-cflags are present
-     # Specifying --with-prim=no overrides the individual options for lflags and cflags.
-     if test "$coin_has_gurobi" != skipping ; then
+
+  if test "$coin_has_gurobi" != skipping ; then
        withval="$with_gurobi_lflags"
        if test -n "$withval" ; then
-         case "$withval" in
-           build | no | yes )
-             as_fn_error $? "\"$withval\" is not valid here; please specify linker flags appropriate for your environment." "$LINENO" 5
-             ;;
-           * )
-             coin_has_gurobi=yes
-             gurobi_lflags="$withval"
-             ;;
-         esac
+	 coin_has_gurobi=requested
+	 gurobi_lflags="$withval"
        fi
 
        withval="$with_gurobi_cflags"
        if test -n "$withval" ; then
-         case "$withval" in
-           build | no | yes )
-             as_fn_error $? "\"$withval\" is not valid here; please specify compiler flags appropriate for your environment." "$LINENO" 5
-             ;;
-           * )
-             coin_has_gurobi=yes
-             gurobi_cflags="$withval"
-             ;;
-         esac
+	 coin_has_gurobi=requested
+	 gurobi_cflags="$withval"
        fi
      fi
 
 
 
-  # At this point, coin_has_prim can be one of
-  # - noInfo (no user options specified),
-  # - skipping (user said no),
-  # - requested,
-  # - build (user said yes or build and gave no further guidance), or
-  # - yes (user specified one or more --with-prim options).
-  # If we're already at yes or skipping, we're done looking.
 
-  # If there are no user options (noInfo) and the default is no, we're skipping.
-  # Otherwise, the default must be yes or build; consider the package requested.
-  # A default action we don't recognise defaults to yes.
-  if test "$coin_has_gurobi" = noInfo ; then
-    case $dflt_action in
-      no )
-        coin_has_gurobi=skipping
-        ;;
-      build )
-        coin_has_gurobi=build
-        ;;
-      * )
-        coin_has_gurobi=requested
-        ;;
-    esac
-  fi
 
-  # Now coin_has_prim can be one of skipping, yes, build, or requested.
-  # For build or requested, use the parameter values or invent some.
-  case $coin_has_gurobi in
-    build | requested)
-      gurobi_lflags="-lgurobi -lpthread -lm"
-         if test "$coin_has_gurobi" = build ; then
-              gurobi_cflags="-I\$(pkgincludedir)/ThirdParty"
-            fi
 
-      coin_has_gurobi=yes
-      ;;
-    skipping | yes )
-      ;;
-    * )
-      { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Unexpected status \"$coin_has_gurobi\" in COIN_FIND_PRIM_LIB" >&5
-$as_echo "$as_me: WARNING: Unexpected status \"$coin_has_gurobi\" in COIN_FIND_PRIM_LIB" >&2;}
-      ;;
-  esac
-
-  # At this point, coin_has_prim is yes or skipping.
   if test $coin_has_gurobi != skipping ; then
-       # Time to run a link check since we have a function name.
-       # Use whatever we've collected for lflags, plus other libraries ().
-       ac_save_LIBS=$LIBS
-       LIBS="$gurobi_lflags "
+       ac_save_CPPFLAGS=$CPPFLAGS
+       CPPFLAGS="$gurobi_cflags"
        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
 /* end confdefs.h.  */
-
-/* Override any GCC internal prototype to avoid an error.
-   Use char because int might match the return type of a GCC
-   builtin and then its argument prototype would still apply.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-char GRBloadenv ();
+#include "gurobi_c.h"
 int
 main ()
 {
-return GRBloadenv ();
+
   ;
   return 0;
 }
 _ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+
+else
+  coin_has_gurobi='no'
+	  gurobi_failmode="header compile"
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+       CPPFLAGS=$ac_save_CPPFLAGS
+     fi
+
+
+  if test "$coin_has_gurobi" != skipping ; then
+       ac_save_LIBS=$LIBS
+       ac_save_CPPFLAGS=$CPPFLAGS
+       LIBS="$gurobi_lflags"
+       CPPFLAGS="$gurobi_cflags"
+       cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+
+#ifdef __cplusplus
+  extern "C"
+#endif
+  void GRBloadenv() ;
+  int main () { GRBloadenv() ; return (0) ; }
+_ACEOF
 if ac_fn_cxx_try_link "$LINENO"; then :
 
 else
-  coin_has_gurobi=no
+  coin_has_gurobi='no'
+	     if test -n "$gurobi_failmode" ; then
+	       gurobi_failmode="$gurobi_failmode, bare link"
+	     else
+	       gurobi_failmode="bare link"
+	     fi
 fi
 rm -f core conftest.err conftest.$ac_objext \
     conftest$ac_exeext conftest.$ac_ext
        LIBS=$ac_save_LIBS
+       CPPFLAGS=$ac_save_CPPFLAGS
      fi
 
-  # The final value of coin_has_prim will be yes, no, or skipping. No means that
-  # the link check failed. Yes means that we passed the link check, or no link
-  # check was performed. Skipping means the user said `don't use.'
+
+  if test $coin_has_gurobi = requested ; then
+    coin_has_gurobi=yes
+  fi
+
 
   # Define BUILDTOOLS_DEBUG to enable debugging output
   if test "$BUILDTOOLS_DEBUG" = 1 ; then
@@ -19249,18 +19159,34 @@ $as_echo "$as_me: gurobi_data is \"$gurobi_data\"" >&6;}
 $as_echo "$as_me: gurobi_pcfiles is \"$gurobi_pcfiles\"" >&6;}
   fi
 
-
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $coin_has_gurobi" >&5
+    if test -n "$gurobi_failmode" ; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: result: $coin_has_gurobi ($gurobi_failmode)" >&5
+$as_echo "$coin_has_gurobi ($gurobi_failmode)" >&6; }
+    else
+      { $as_echo "$as_me:${as_lineno-$LINENO}: result: $coin_has_gurobi" >&5
 $as_echo "$coin_has_gurobi" >&6; }
+    fi
   else
-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $coin_has_gurobi due to COIN_SKIP_PROJECTS" >&5
-$as_echo "$coin_has_gurobi due to COIN_SKIP_PROJECTS" >&6; }
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $coin_has_gurobi (COIN_SKIP_PROJECTS)" >&5
+$as_echo "$coin_has_gurobi (COIN_SKIP_PROJECTS)" >&6; }
   fi
 
-  # Possibilities are `yes', `no', or `skipping'. Normalise to `yes' or `no'.
+  if test "$coin_has_gurobi" = "no" ; then
+    if expr "$gurobi_failmode" : '.*header.*' &>/dev/null ; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Compiler flags are \"$gurobi_cflags\". Check that they are correct. You can supply correct values using --with-gurobi-cflags." >&5
+$as_echo "$as_me: WARNING: Compiler flags are \"$gurobi_cflags\". Check that they are correct. You can supply correct values using --with-gurobi-cflags." >&2;}
+    fi
+    if expr "$gurobi_failmode" : '.*link.*' &>/dev/null ; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: Linker flags are \"$gurobi_lflags\". Check that they are correct. You can supply correct values using --with-gurobi-lflags." >&5
+$as_echo "$as_me: WARNING: Linker flags are \"$gurobi_lflags\". Check that they are correct. You can supply correct values using --with-gurobi-lflags." >&2;}
+    fi
+  fi
+
+
   if test "$coin_has_gurobi" != yes ; then
     coin_has_gurobi=no
   fi
+
 
    if test $coin_has_gurobi = yes; then
   COIN_HAS_GUROBI_TRUE=
@@ -19271,8 +19197,7 @@ else
 fi
 
 
-  # If we've located the package, define preprocessor symbol COIN_HAS_PRIM
-  # and augment the necessary variables for the client packages.
+
   if test $coin_has_gurobi = yes ; then
 
 $as_echo "#define OSI_HAS_GUROBI 1" >>confdefs.h
@@ -19284,20 +19209,11 @@ $as_echo "#define OSI_HAS_GUROBI 1" >>confdefs.h
 
 
 
+
   fi
 
-if test "$coin_has_gurobi" = yes ; then
-  coin_save_CPPFLAGS="$CPPFLAGS"
-  CPPFLAGS="$gurobi_cflags $CPPFLAGS"
-  ac_fn_cxx_check_header_mongrel "$LINENO" "gurobi_c.h" "ac_cv_header_gurobi_c_h" "$ac_includes_default"
-if test "x$ac_cv_header_gurobi_c_h" = xyes; then :
-  CPPFLAGS="$coin_save_CPPFLAGS"
-else
-  as_fn_error $? "Gurobi library available, but Gurobi header gurobi_c.h cannot be compiled. Consider using --without-gurobi." "$LINENO" 5
-fi
 
 
-fi
 
 
    if test "$BUILDTOOLS_DEBUG" = 1 ; then
