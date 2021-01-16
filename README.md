@@ -5,7 +5,7 @@
 [![Latest Release](https://img.shields.io/github/v/release/coin-or/Osi?sort=semver)](https://github.com/coin-or/Osi/releases)
 
 _This file is auto-generated from [config.yml](.coin-or/config.yml) using the 
-[generate_readme](.coin-or/generate_readme).
+[generate_readme](.coin-or/generate_readme) script.
 To make changes, please edit [config.yml](.coin-or/config.yml) or the generation script._
 
 Osi (*O*pen *S*olver *I*nterface) provides an abstract base class to a generic linear programming (LP) solver, along with derived classes for specific solvers.
@@ -60,11 +60,19 @@ The Osi website is https://github.com/coin-or/Osi.
 
 ## CURRENT BUILD STATUS
 
-[![Build Status](https://travis-ci.org/coin-or/Osi.svg?branch=master)](https://travis-ci.org/coin-or/Osi)
+[![Build Status](https://travis-ci.com/coin-or/Osi.svg?branch=master)](https://travis-ci.com/coin-or/Osi)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/frpvf6totmchmjmv/branch/master?svg=true)](https://ci.appveyor.com/project/tkralphs/osi-x2d8y/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/frpvf6totmchmjmv/branch/master?svg=true)](https://ci.appveyor.com/project/coin-or/Osi/branch/master)
 
 ## DOWNLOAD
+
+### Docker image
+
+There is a Docker image that provides Osi, as well as other projects
+in the [COIN-OR Optimization
+Suite](https://github.com/coin-or/COIN-OR-OptimizationSuite)[here](https://hub.docker.com/repository/docker/coinor/coin-or-optimization-suite)
+
+### Binaries
 
 Binaries for most platforms are available as part of [Cbc](https://bintray.com/coin-or/download/Cbc). 
 
@@ -133,7 +141,7 @@ documentation [here](http://coin-or.github.io/Osi/Doxygen).
 ## Project Links
 
  * [COIN-OR Initiative](http://www.coin-or.org/)
- * [mailing list](http://list.coin-or.org/mailman/listinfo/osi)
+ * [Discussion forum](https://github.com/coin-or/Osi/discussions)
  * [Report a bug](https://github.com/coin-or/Osi/issues/new)
  * [Doxygen-generated html documentation](http://www.coin-or.org/Doxygen/Osi/hierarchy.html)
  * [OSI2 Discussion](https://projects.coin-or.org/Osi2/wiki/Osi2Discussion)
