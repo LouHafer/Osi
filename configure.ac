@@ -74,13 +74,24 @@ AC_COIN_CHK_HERE([OsiLib],[OsiCommonTestLib],[osi])
 #                            Third party solvers                            #
 #############################################################################
 
-# These are third-party solvers with source distributions that can be
-# downloaded and built. The general flow here is as above: Initialise the
-# library, add external components, finalize the flags, and add any components
-# being built here.
-AC_COIN_CHK_PKG(Glpk,[OsiGlpkLib OsiTest],,[build])
+# Third-party solvers: Some have source distributions that can be downloaded
+# and built (possibly as a COIN ThirdParty package); these are detected with
+# _PKG. Others are proprietary; these are detected with _LIB. The general
+# flow here is as above: Initialise the library, add external components,
+# finalize the flags, and add any components being built here.
 
-AC_COIN_CHK_PKG(SoPlex,[OsiSpxLib OsiTest],[coinsoplex < 1.7],[build])
+AC_COIN_CHK_PKG(Glpk,[OsiGlpkLib OsiTest],,[default_build])
+
+AC_COIN_CHK_PKG(SoPlex,[OsiSpxLib OsiTest],[soplex < 1.7],[default_build])
+
+AC_COIN_CHK_LIBHDR(SoPlex,[OsiSpxLib OsiTest],[],[],[],
+  [new soplex::DIdxSet()],
+  [#include "soplex.h"
+   #if SOPLEX_VERSION >= 400
+   #error "OsiSpx requires SoPlex < 4.0"
+   #endif
+  ],
+  [default_skip])
 
 AC_COIN_CHK_LIB(Cplex,[OsiCpxLib OsiTest],[-lcplex -lpthread -lm -ldl],[],[],
                 [CPXgetstat],[cplex.h])

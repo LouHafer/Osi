@@ -102,7 +102,7 @@
 /* Define to 1 if Sample is available. */
 #undef OSI_HAS_SAMPLE
 
-/* Define to 1 if SoPlex is available. */
+/* Define to 1 if the SoPlex package is available */
 #undef OSI_HAS_SOPLEX
 
 /* Define to 1 if the Xpress package is available */
