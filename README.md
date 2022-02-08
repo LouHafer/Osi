@@ -6,7 +6,8 @@
 
 _This file is auto-generated from [config.yml](.coin-or/config.yml) using the 
 [generate_readme](.coin-or/generate_readme) script.
-To make changes, please edit [config.yml](.coin-or/config.yml) or the generation script._
+To make changes, please edit [config.yml](.coin-or/config.yml) or the generation scripts
+[here](.coin-or/generate_readme) and [here](https://github.com/coin-or/coinbrew/blob/master/scripts/generate_readme)._
 
 Osi (*O*pen *S*olver *I*nterface) provides an abstract base class to a generic linear programming (LP) solver, along with derived classes for specific solvers.
 Many applications may be able to use the Osi to insulate themselves from a specific LP solver.
@@ -52,49 +53,67 @@ Osi is written in C++ and is released as open source under the [Eclipse Public L
 
 It is distributed under the auspices of the [COIN-OR Foundation](https://www.coin-or.org)
 
-The Osi website is https://github.com/coin-or/Osi.
+The Osi development site is https://github.com/coin-or/Osi.
 
 ## CITE
 
-[![DOI](https://zenodo.org/badge/173476455.svg)](https://zenodo.org/badge/latestdoi/173476455)
+Code: [![DOI](https://zenodo.org/badge/173476455.svg)](https://zenodo.org/badge/latestdoi/173476455)
+
 
 ## CURRENT BUILD STATUS
 
-[![Build Status](https://travis-ci.com/coin-or/Osi.svg?branch=master)](https://travis-ci.com/coin-or/Osi)
+[![Windows Builds](https://github.com/coin-or/Osi/actions/workflows/windows-ci.yml/badge.svg?branch=master)](https://github.com/coin-or/Osi/actions/workflows/windows-ci.yml?query=branch%3Amaster)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/frpvf6totmchmjmv/branch/master?svg=true)](https://ci.appveyor.com/project/coin-or/Osi/branch/master)
+[![Linux and MacOS Builds](https://github.com/coin-or/Osi/actions/workflows/linux-ci.yml/badge.svg?branch=master)](https://github.com/coin-or/Osi/actions/workflows/linux-ci.yml?query=branch%3Amaster)
 
 ## DOWNLOAD
+
+What follows is a quick start guide for obtaining or building
+Osi on common platforms. More detailed information is
+available [here](https://coin-or.github.io/user_introduction.html).
 
 ### Docker image
 
 There is a Docker image that provides Osi, as well as other projects
 in the [COIN-OR Optimization
-Suite](https://github.com/coin-or/COIN-OR-OptimizationSuite)[here](https://hub.docker.com/repository/docker/coinor/coin-or-optimization-suite)
+Suite](https://github.com/coin-or/COIN-OR-OptimizationSuite) [here](https://hub.docker.com/repository/docker/coinor/coin-or-optimization-suite)
 
 ### Binaries
 
-Binaries for most platforms are available as part of [Cbc](https://bintray.com/coin-or/download/Cbc). 
+For newer releases, binaries will be made available as assets attached to
+releases in Github
+[here](https://github.com/coin-or/Osi/releases). Older binaries
+are archived as part of Cbc
+[here](https://www.coin-or.org/download/binary/Cbc).
 
  * *Linux*: On Debian/Ubuntu, Osi is available in the package `coinor-osi` and can be installed with apt. On Fedora, Osi is available in the package `coin-or-Osi`.
- * *Windows*: The easiest way to get Osi on Windows is to download from *[Bintray](https://bintray.com/coin-or/download/Cbc)*.
- * *Mac OS X*: The easiest way to get Cbc on Mac OS X is through [Homebrew](https://brew.sh).
+ * *Windows*: The easiest way to get Osi on Windows is to download an archive as described above.
+ * *Mac OS X*: The easiest way to get Osi on Mac OS X is through [Homebrew](https://brew.sh).
    * `brew tap coin-or-tools/coinor`
    * `brew install coin-or-tools/coinor/osi`
 
 Due to license incompatibilities, pre-compiled binaries lack some functionality.
 If binaries are not available for your platform for the latest version and you would like to request them to be built and posted, feel free to let us know on the mailing list.
 
-*Source code* can be obtained either by
+### Source
+
+Source code can be obtained either by
 
  * Downloading a snapshot of the source code for the latest release version of Osi from the
  [releases](https://github.com/coin-or/Osi/releases) page.
  * Cloning this repository from [Github](https://github.com/coin-or/Osi) or 
  * Using the [coinbrew](https://github.com/coin-or/coinbrew) script to get the project and all dependencies (recommended, see below).   
 
-Below is a quick start guide for building on common platforms. More detailed
-build instructions are
-[here](https://coin-or.github.io/user_introduction.html).
+### Dependencies
+
+Osi has a number of dependencies, which are detailed in
+[config.yml](.coin-or/config.yml). Dependencies on other COIN-OR projects are
+automatically downloaded when obtaining the source with `coinbrew`. For some
+of the remaining third-party dependencies, automatic download scripts and
+build wrappers are provided (and will also be automatically run for required
+and recommended dependencies), while other libraries that are aeasy to obtain
+must be installed using an appropriate package manager (or may come with your
+OS by default). 
 
 ## BUILDING from source
 
@@ -102,7 +121,8 @@ The quick start assumes you are in a bash shell.
 
 ### Using `coinbrew`
 
-To build CoinUtils from source, obtain the `coinbrew` script, do
+To download and build Osi from source, execute the 
+following on the command line. 
 ```
 wget https://raw.githubusercontent.com/coin-or/coinbrew/master/coinbrew
 chmod u+x coinbrew
@@ -140,11 +160,12 @@ documentation [here](http://coin-or.github.io/Osi/Doxygen).
 
 ## Project Links
 
- * [COIN-OR Initiative](http://www.coin-or.org/)
+ * [Code of Conduct](https://www.coin-or.org/code-of-conduct/)
+ * [COIN-OR Web Site](http://www.coin-or.org/)
  * [Discussion forum](https://github.com/coin-or/Osi/discussions)
  * [Report a bug](https://github.com/coin-or/Osi/issues/new)
- * [Doxygen-generated html documentation](http://www.coin-or.org/Doxygen/Osi/hierarchy.html)
- * [OSI2 Discussion](https://projects.coin-or.org/Osi2/wiki/Osi2Discussion)
+ * [Doxygen-generated html documentation](https://coin-or.github.io/Osi/Doxygen)
+ * [OSI2 Discussion](https://github.com/coin-or/Osi2/discussions)
  * The most recent tutorial on OSI can be accessed from the [page on presentations from the 2004 CORS/INFORMS Joint Meeting in Banff](http://www.coin-or.org/Presentations/CORSINFORMSWorkshop04/index.html).
  * [The COIN-OR Open Solver Interface: Technology Overview](http://www.coin-or.org/Presentations/CORS2004-OSI.pdf): An overview of the COIN-OR OSI and design issues for a next-generation version given at CORS/INFORMS 2004 by Matthew Saltzman.
 

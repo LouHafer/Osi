@@ -126,6 +126,13 @@ public:
     const char *prohibited = NULL,
     bool doStatus = true,
     const char *rowProhibited = NULL);
+  virtual OsiSolverInterface *miniPresolvedModel(OsiSolverInterface &origModel,
+    double feasibilityTolerance = 0.0,
+    bool keepIntegers = true,
+    int numberPasses = 1,
+    const char *prohibited = NULL,
+    bool doStatus = true,
+    const char *rowProhibited = NULL);
 
   /*! \brief Restate the solution to the presolved problem in terms of the
 	     original problem and load it into the original model.
@@ -199,6 +206,8 @@ public:
       - 0x20 allow dubious gub element reduction
       - 0x40 more for dupcol
       - 0x80 more work in doubletons
+      - 0x300 allow more fill in impliedfree 0 - 2 (no fill)
+              100 3, 200 4, 300 5
 
     GUB element reduction is only partially implemented in CoinPresolve (see
     gubrow_action) and willl cause an abort at postsolve. It's not clear
@@ -282,6 +291,8 @@ protected:
     this method
   */
   virtual const CoinPresolveAction *presolve(CoinPresolveMatrix *prob);
+  virtual const CoinPresolveAction *miniPresolve(CoinPresolveMatrix *prob,
+					       OsiSolverInterface * solver);
 
   /*! \brief Reverse presolve transformations to recover the solution
 	     to the original problem.
