@@ -1,2 +1,4 @@
-aclocal.m4*
-autom4te.cache/
+﻿# Ignore files created during unit tests
+/MSVisualStudio/*/*.mps
+/MSVisualStudio/*/*.lp
+/MSVisualStudio/*/*.out

@@ -1087,13 +1087,12 @@ std::vector< double * > OsiXprSolverInterface::getDualRays(int maxNumRays,
   double *dualRay = new double[nrows];
   int hasRay;
 
-  int status;
   XPRS_CHECKED(XPRSgetdualray, (prob_, dualRay, &hasRay));
   if(hasRay){
     return std::vector< double * >(1, dualRay);
   }
 
-  delete dualRay;
+  delete[] dualRay;
   return std::vector<double *>(0, (double *) NULL); 
 }
 
@@ -2640,7 +2639,11 @@ int OsiXprSolverInterface::getNumIntVars() const
 
   if (isDataLoaded()) {
 
+#if XPVERSION <= 40
     XPRS_CHECKED(XPRSgetglobal, (prob_, &nintvars, &nsets, NULL, NULL, NULL, NULL, NULL, NULL, NULL));
+#else
+    XPRS_CHECKED(XPRSgetmipentities, (prob_, &nintvars, &nsets, NULL, NULL, NULL, NULL, NULL, NULL, NULL));
+#endif
   }
 
   return nintvars;
@@ -2666,7 +2669,11 @@ void OsiXprSolverInterface::getVarTypes() const
     ivartype_ = new char[nintvars];
     ivarind_ = new int[nintvars];
 
+#if XPVERSION <= 40
     XPRS_CHECKED(XPRSgetglobal, (prob_, &nintvars, &nsets, ivartype_, ivarind_, NULL, NULL, NULL, NULL, NULL));
+#else
+    XPRS_CHECKED(XPRSgetmipentities, (prob_, &nintvars, &nsets, ivartype_, ivarind_, NULL, NULL, NULL, NULL, NULL));
+#endif
     // Currently, only binary and integer vars are supported.
 
     vartype_ = new char[ncols];
