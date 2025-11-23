@@ -271,7 +271,7 @@ OsiPresolve::presolvedModel(OsiSolverInterface &si,
               basicCnt--;
               double down = acts[i] - rlo[i];
               double up = rup[i] - acts[i];
-              if (CoinMin(up, down) < infinity) {
+              if (std::min(up, down) < infinity) {
                 if (down <= up)
                   prob.setRowStatus(i, CoinPrePostsolveMatrix::atLowerBound);
                 else
@@ -376,7 +376,7 @@ OsiPresolve::presolvedModel(OsiSolverInterface &si,
 		lowerValue = 0.0;
 		upperValue = 0.0;
 	      } else if (lowerValue >1.0e-5) {
-		lowerValue = CoinMax(lowerValue,lowerSC);
+		lowerValue = std::max(lowerValue,lowerSC);
 	      }
 	      presolvedModel_->setColBounds(i, lowerValue, upperValue);
 	    }
@@ -979,7 +979,7 @@ const CoinPresolveAction *OsiPresolve::presolve(CoinPresolveMatrix *prob)
       paction_ = dupcol_action::presolve(prob, paction_);
       possibleSkip;
 #ifdef CBC_PREPROCESS_EXPERIMENT
-      paction_ = twoxtwo_action::presolve(prob, paction_);
+      //paction_ = twoxtwo_action::presolve(prob, paction_);
 #endif
 #if PRESOLVE_DEBUG > 0
       if (monitor)
