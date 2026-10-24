@@ -378,30 +378,38 @@ void OsiCuts::insertIfNotDuplicate(OsiRowCut &rc, CoinRelFltEq treatAsSame)
 #include "CoinRational.hpp"
 #define SMALL_VALUE1 1.0e-14
 static long computeGcd(long a, long b) {
+  // The gcd does not depend on sign, and callers here do pass signed
+  // numerators, so reduce to magnitudes up front. Besides being the correct
+  // definition, that removes the one input pair which traps: b % a with a == -1
+  // and b == LONG_MIN is a signed-division overflow, i.e. SIGFPE, and LONG_MIN
+  // is exactly what an out-of-range double-to-integer conversion yields.
+  // Negating via unsigned long keeps the reduction itself well defined (plain
+  // -LONG_MIN overflows); the only magnitude that could not be converted back
+  // is 2^63, which requires both arguments to be LONG_MIN.
+  // (0UL - x rather than -x, which MSVC rejects with /sdl, warning C4146)
+  unsigned long ua = (a < 0) ? 0UL - static_cast< unsigned long >(a)
+                             : static_cast< unsigned long >(a);
+  unsigned long ub = (b < 0) ? 0UL - static_cast< unsigned long >(b)
+                             : static_cast< unsigned long >(b);
   // This is the standard Euclidean algorithm for gcd
-  long remainder = 1;
-  // Make sure a<=b (will always remain so)
-  if (a > b) {
-    // Swap a and b
-    long temp = a;
-    a = b;
-    b = temp;
+  unsigned long remainder = 1;
+  // Make sure ua<=ub (will always remain so)
+  if (ua > ub) {
+    // Swap ua and ub
+    unsigned long temp = ua;
+    ua = ub;
+    ub = temp;
   }
-  // If zero then gcd is nonzero
-  if (!a) {
-    if (b) {
-      return b;
-    } 
-    else {
-      return 0;
-    }
+  // If zero then gcd is the other one (and 0 when both are zero)
+  if (!ua) {
+    return static_cast< long >(ub);
   }
   while (remainder) {
-    remainder = b % a;
-    b = a;
-    a = remainder;
+    remainder = ub % ua;
+    ub = ua;
+    ua = remainder;
   }
-  return b;
+  return static_cast< long >(ub);
 } /* computeGcd */
 static bool scaleCutIntegral(double* cutElem, int* cutIndex, int cutNz,
 			     double& cutRhs, double maxdelta) {
@@ -433,17 +441,21 @@ static bool scaleCutIntegral(double* cutElem, int* cutIndex, int cutNz,
       return false;
   }
   scale = fabs(scale);
-  // Looks like we have a good scaling factor; scale and return;
+  // Pre-check that every scaled value rounds to an integer before modifying
+  // anything, so the caller's arrays are never left in a partially-scaled state.
   for (int i = 0; i < cutNz; ++i) {
     double value = cutElem[i]*scale;
-    cutElem[i] = floor(value+0.5);
-    assert (fabs(cutElem[i]-value)<1.0e-9);
+    if (fabs(floor(value+0.5)-value) >= 1.0e-9) return false;
   }
   {
     double value = cutRhs*scale;
-    cutRhs = floor(value+0.5);
-    assert (fabs(cutRhs-value)<1.0e-9);
+    if (fabs(floor(value+0.5)-value) >= 1.0e-9) return false;
   }
+  // Looks like we have a good scaling factor; scale and return.
+  for (int i = 0; i < cutNz; ++i) {
+    cutElem[i] = floor(cutElem[i]*scale+0.5);
+  }
+  cutRhs = floor(cutRhs*scale+0.5);
   return true;
 } /* scaleCutIntegral */
 // Returns value - floor but allowing for small errors

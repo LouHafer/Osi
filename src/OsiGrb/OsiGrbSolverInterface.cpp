@@ -1554,7 +1554,7 @@ std::vector< double * > OsiGrbSolverInterface::getDualRays(int maxNumRays,
   const double minusone = -1.0;
   const char *sense = getRowSense();
 
-  const CoinPackedVectorBase **cols = new const CoinPackedVectorBase *[numrows];
+  const CoinPackedVectorBase **cols = new const CoinPackedVectorBase *[2 * numrows]; //ranged constraints are decomposed into two constraints
   int newcols = 0;
   for (i = 0; i < numrows; ++i) {
     switch (sense[i]) {
@@ -1580,6 +1580,8 @@ std::vector< double * > OsiGrbSolverInterface::getDualRays(int maxNumRays,
 
   solver.addCols(newcols, cols, clb, cub, obj);
   delete[] index;
+  for (int k = 0; k < newcols; ++k) 
+    delete cols[k];
   delete[] cols;
   delete[] clb;
   delete[] cub;
@@ -2410,7 +2412,7 @@ void OsiGrbSolverInterface::addRows(const int numrows,
   if (haverangedrows) {
     int nr = getNumRows() - numrows;
     for (i = 0; i < numrows; ++i)
-      if (rowlb[i] > getInfinity() && rowub[i] < getInfinity() && rowub[i] - rowlb[i] > 0.0)
+      if (rowlb[i] > -getInfinity() && rowub[i] < getInfinity() && rowub[i] - rowlb[i] > 0.0)
         convertToRangedRow(nr + i, rowub[i], rowub[i] - rowlb[i]);
   } else if (nauxcols)
     resizeAuxColIndSpace();
@@ -2501,6 +2503,8 @@ void OsiGrbSolverInterface::deleteRows(const int num, const int *rowIndices)
         convertToNormalRow(rowIndices[i], 'E', 0.0);
     }
   }
+
+  GUROBI_CALL("deleteRows", GRBupdatemodel(getMutableLpPtr()));
 
   GUROBI_CALL("deleteRows", GRBdelconstrs(getLpPtr(OsiGrbSolverInterface::KEEPCACHED_COLUMN), num, const_cast< int * >(rowIndices)));
 
